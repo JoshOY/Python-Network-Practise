@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Simple Gopher Client with exception handling - Chapter 1
-# gopherClient2.py
+# Simple Gopher Client with file-like interface - Chapter 1
+# gopherClient3.py
 
 import socket, sys
 
@@ -17,10 +17,9 @@ if __name__ == '__main__':
         print("Error connecting to server: %s" % e)
         sys.exit(1)
         
-    s.sendall(filename + "\r\n")
+    fd = s.makefile('rw', 0)
+    fd.write(filename + "\r\n")
 
-    while True:
-        buf = s.recv(2048)
-        if len(buf) == 0:
-            break
-        sys.stdout.write(buf)
+    # Just output the content like reading a file
+    for line in fd.readlines():
+    	sys.stdout.write(line)
